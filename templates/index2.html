@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Note Vault</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #f4f4f4;
+      padding: 40px;
+      text-align: center;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    .copy-box {
+      margin-top: 20px;
+    }
+    #linkOutput {
+      background: #222;
+      color: #0f0;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Secure Note Vault</h1>
+  <form method="post">
+    <textarea name="note" placeholder="Enter your secure note..."></textarea><br>
+    Expiry time (in minutes): <input type="number" name="expiry" value="60"><br>
+    One-Time View: <input type="checkbox" name="one_time" value="1"><br>
+    <button type="submit">Generate Secure Link</button>
+  </form>
+
+  {% if link %}
+  <div class="copy-box">
+    <h3>Your Secure Link:</h3>
+    <div id="linkOutput">{{ link }}</div><br>
+    <button onclick="copyLink()">Copy to Clipboard</button>
+  </div>
+  {% endif %}
+
+  <script>
+    function copyLink() {
+      const text = document.getElementById('linkOutput').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Link copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
+

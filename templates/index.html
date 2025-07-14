@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Note Vault</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #f4f4f4;
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ffc3;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px #00ffc3;
+    }
+
+    textarea {
+      width: 80%;
+      height: 150px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      background: #1a1a1a;
+      color: #00ffcc;
+      border: 2px solid #00ffc3;
+      box-shadow: 0 0 12px #00ffc3 inset;
+      margin-bottom: 20px;
+    }
+
+    input[type="number"],
+    input[type="checkbox"],
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #00ffc3;
+      color: #0f0f0f;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #0ff;
+      box-shadow: 0 0 12px #0ff;
+    }
+
+    .copy-box {
+      margin-top: 30px;
+    }
+
+    #linkOutput {
+      background: #222;
+      color: #00ffc3;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      box-shadow: 0 0 10px #00ffc3;
+      display: inline-block;
+      margin-bottom: 10px;
+      min-height: 24px;
+    }
+
+    #copyBtn {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      textarea {
+        width: 95%;
+      }
+
+      input, button {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔐 Secure Note Vault</h1>
+
+  <form method="post">
+    <textarea name="note" placeholder="Enter your secure note..."></textarea><br>
+    Expiry time (minutes): 
+    <input type="number" name="expiry" value="60"><br>
+    One-Time View: 
+    <input type="checkbox" name="one_time" value="1"><br>
+    <button type="submit">Generate Secure Link</button>
+  </form>
+
+  {% if link %}
+  <div class="copy-box">
+    <h3>🔗 Your Secure Link</h3>
+    <div id="linkOutput"></div><br>
+    <button id="copyBtn" onclick="copyLink()">Copy to Clipboard</button>
+  </div>
+
+  <script>
+    const link = "{{ link }}";
+    const output = document.getElementById('linkOutput');
+    const copyBtn = document.getElementById('copyBtn');
+
+    let i = 0;
+    function typeLink() {
+      if (i < link.length) {
+        output.innerHTML += link.charAt(i);
+        i++;
+        setTimeout(typeLink, 25); // speed
+      } else {
+        copyBtn.style.display = "inline-block";
+      }
+    }
+    typeLink();
+  </script>
+  {% endif %}
+
+  <script>
+    function copyLink() {
+      const text = document.getElementById('linkOutput').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('✅ Link copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>
