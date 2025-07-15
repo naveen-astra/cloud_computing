@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title></head>
+<body>
+  <h2>Welcome, {{ username }} 👋</h2>
+  <p><a href="/">➕ Create New Note</a> | <a href="/logout">🚪 Logout</a></p>
+
+  <h3>📝 My Notes</h3>
+  {% if my_notes %}
+    <ul>
+      {% for id, exp, one_time, viewed in my_notes %}
+        <li>
+          <a href="/note/{{ id }}">{{ id }}</a>
+          - expires at {{ exp }}
+          {% if one_time %} (One-time) {% endif %}
+          {% if viewed %} ✅ Viewed {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No notes created yet.</p>
+  {% endif %}
+
+  <h3>📬 Shared With Me</h3>
+  {% if shared_notes %}
+    <ul>
+      {% for id, exp in shared_notes %}
+        <li>
+          <a href="/note/{{ id }}">{{ id }}</a> - expires at {{ exp }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No shared notes yet.</p>
+  {% endif %}
+</body>
+</html>
