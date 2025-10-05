@@ -108,16 +108,13 @@ def show_note(note_id):
     # Decrypt note
     decrypted_note = decrypt_note(content)
     
-    # Format timestamps for display
-    created_display = datetime.fromisoformat(created_at).strftime("%B %d, %Y at %I:%M %p")
-    expires_display = datetime.fromisoformat(expires_at).strftime("%B %d, %Y at %I:%M %p")
-    
+    # Pass ISO timestamps to template for JavaScript conversion to local time
     return render_template(
         "view_note.html", 
         note=decrypted_note,
         one_time_view=one_time_view,
-        created_at=created_display,
-        expires_at=expires_display
+        created_at_iso=created_at,
+        expires_at_iso=expires_at
     )
 
 if __name__ == "__main__":

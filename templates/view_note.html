@@ -273,18 +273,18 @@
         <div class="note-content" id="noteContent">{{ note }}</div>
 
         <!-- Metadata -->
-        {% if created_at or expires_at %}
+        {% if created_at_iso or expires_at_iso %}
         <div class="note-metadata">
-          {% if created_at %}
+          {% if created_at_iso %}
           <div class="metadata-item">
             <span class="icon">📅</span>
-            <span><strong>Created:</strong> {{ created_at }}</span>
+            <span><strong>Created:</strong> <span id="createdTime" data-time="{{ created_at_iso }}">{{ created_at_iso }}</span></span>
           </div>
           {% endif %}
-          {% if expires_at %}
+          {% if expires_at_iso %}
           <div class="metadata-item">
             <span class="icon">⏰</span>
-            <span><strong>Expires:</strong> {{ expires_at }}</span>
+            <span><strong>Expires:</strong> <span id="expiresTime" data-time="{{ expires_at_iso }}">{{ expires_at_iso }}</span></span>
           </div>
           {% endif %}
         </div>
@@ -357,6 +357,40 @@
         selection.removeAllRanges();
       });
     }
+
+    // Convert UTC timestamps to user's local timezone
+    function formatLocalTime(isoString) {
+      const date = new Date(isoString);
+      const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      };
+      return date.toLocaleString('en-US', options);
+    }
+
+    // Update timestamps on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const createdTimeEl = document.getElementById('createdTime');
+      const expiresTimeEl = document.getElementById('expiresTime');
+      
+      if (createdTimeEl) {
+        const isoTime = createdTimeEl.getAttribute('data-time');
+        if (isoTime) {
+          createdTimeEl.textContent = formatLocalTime(isoTime);
+        }
+      }
+      
+      if (expiresTimeEl) {
+        const isoTime = expiresTimeEl.getAttribute('data-time');
+        if (isoTime) {
+          expiresTimeEl.textContent = formatLocalTime(isoTime);
+        }
+      }
+    });
   </script>
 </body>
 </html>
