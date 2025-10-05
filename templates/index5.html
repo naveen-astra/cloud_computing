@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Notes - Note Sharing Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">SmartNotes</div>
+            <ul class="nav-links">
+                <li><a onclick="showPage('home')">Home</a></li>
+                <li><a onclick="showPage('services')">Services</a></li>
+                <li><a onclick="showPage('about')">About</a></li>
+                <li><a onclick="showPage('editor')">Try Editor</a></li>
+                <li><a onclick="showPage('login')">Login</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <button class="mobile-menu" onclick="toggleMobileMenu()">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <section class="hero">
+            <div class="container">
+                <h1>Smart Notes for Everyone</h1>
+                <p>Create, edit, and share your notes seamlessly. No barriers, just pure productivity.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary" onclick="showPage('editor')">Try Without Login</a>
+                    <a href="#" class="btn btn-secondary" onclick="showPage('login')">Login to Personalize</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>Why Choose SmartNotes?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Rich Text Editor</h3>
+                        <p>Beautiful, intuitive editor with formatting options that make your notes shine.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3>Easy Sharing</h3>
+                        <p>Share notes instantly with custom links. Perfect for collaboration and feedback.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Privacy First</h3>
+                        <p>Your notes are secure. Choose between public sharing or private storage.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Lightning Fast</h3>
+                        <p>No loading times. Your notes sync instantly across all devices.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌙</div>
+                        <h3>Dark Mode</h3>
+                        <p>Easy on the eyes with beautiful dark theme support.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Ready</h3>
+                        <p>Works perfectly on all devices. Take notes anywhere, anytime.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Services Page -->
+    <div id="services" class="page">
+        <section class="features">
+            <div class="container">
+                <h2>Our Services</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h3>Public Note Editing</h3>
+                        <p>Create and edit notes without registration. Perfect for quick thoughts and temporary notes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Secure Note Sharing</h3>
+                        <p>Share notes with custom privacy settings. Control who can view and edit your content.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👤</div>
+                        <h3>Optional Accounts</h3>
+                        <p>Create an account to save notes online, sync across devices, and unlock premium features.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Analytics Dashboard</h3>
+                        <p>Track your note-taking habits and productivity with detailed insights.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <section class="features">
+            <div class="container">
+                <h2>About SmartNotes</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Our Mission</h3>
+                        <p>To make note-taking accessible to everyone, regardless of their technical background or device.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>Innovation</h3>
+                        <p>We constantly innovate to bring you the best note-taking experience with cutting-edge technology.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤝</div>
+                        <h3>Community</h3>
+                        <p>Built by note-takers, for note-takers. We listen to our community and evolve together.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Global Impact</h3>
+                        <p>Serving millions of users worldwide, helping them organize their thoughts and ideas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Editor Page -->
+    <div id="editor" class="page">
+        <div class="editor-container">
+            <div class="container">
+                <div class="editor-main">
+                    <div class="editor-header">
+                        <div>
+                            <h2>📝 Public Note Editor</h2>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Create and share notes instantly - No login required!</p>
+                        </div>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" onclick="exportNote()">📥 Export</button>
+                            <button class="btn btn-primary" onclick="showPage('login')">🔐 Login to Save Online</button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-toolbar">
+                        <div class="toolbar-group">
+                            <span class="toolbar-label">Format:</span>
+                            <button class="btn btn-tool" onclick="formatText('bold')" title="Bold"><strong>B</strong></button>
+                            <button class="btn btn-tool" onclick="formatText('italic')" title="Italic"><em>I</em></button>
+                            <button class="btn btn-tool" onclick="formatText('h1')" title="Heading 1">H1</button>
+                            <button class="btn btn-tool" onclick="formatText('h2')" title="Heading 2">H2</button>
+                        </div>
+                        <div class="toolbar-group">
+                            <span class="toolbar-label">Actions:</span>
+                            <button class="btn btn-tool" onclick="clearEditor()" title="Clear All">🗑️ Clear</button>
+                            <button class="btn btn-tool" onclick="copyToClipboard()" title="Copy to Clipboard">📋 Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="editor-workspace">
+                        <textarea class="editor-textarea" id="noteEditor" placeholder="✨ Start typing your amazing note here...\n\nTips:\n- Use the toolbar above for formatting\n- Click 'Share Note' below to generate a shareable link\n- Set expiry time for auto-deletion"></textarea>
+                        <div class="editor-stats">
+                            <span id="charCount">0 characters</span>
+                            <span id="wordCount">0 words</span>
+                            <span id="lineCount">0 lines</span>
+                        </div>
+                    </div>
+
+                    <div class="share-section">
+                        <div class="share-header">
+                            <h3>🔗 Share Your Note</h3>
+                            <p>Generate a secure shareable link with custom expiry settings</p>
+                        </div>
+                        
+                        <div class="share-options">
+                            <div class="option-group">
+                                <label for="expiryTime">
+                                    <span class="option-icon">⏰</span>
+                                    <span>Auto-Delete After:</span>
+                                </label>
+                                <select id="expiryTime" class="form-control" onchange="handleExpiryChange()">
+                                    <option value="5">5 minutes</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="180">3 hours</option>
+                                    <option value="360">6 hours</option>
+                                    <option value="720">12 hours</option>
+                                    <option value="1440">24 hours</option>
+                                    <option value="2880">2 days</option>
+                                    <option value="10080">7 days</option>
+                                    <option value="custom">⚙️ Custom Time</option>
+                                </select>
+                                
+                                <!-- Custom Time Input (Hidden by default) -->
+                                <div id="customTimeInput" style="display: none; margin-top: 1rem;">
+                                    <div style="display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap;">
+                                        <div style="flex: 1; min-width: 120px;">
+                                            <label for="customTimeValue" style="font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Duration:</label>
+                                            <input type="number" id="customTimeValue" class="form-control" min="1" max="999" value="1" placeholder="Enter value">
+                                        </div>
+                                        <div style="flex: 1; min-width: 120px;">
+                                            <label for="customTimeUnit" style="font-size: 0.9rem; display: block; margin-bottom: 0.5rem;">Unit:</label>
+                                            <select id="customTimeUnit" class="form-control">
+                                                <option value="minutes">Minutes</option>
+                                                <option value="hours">Hours</option>
+                                                <option value="days">Days</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0;">
+                                        💡 Example: "15 minutes" or "2 hours" or "3 days"
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="option-group one-time-view-option">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="oneTimeView" onchange="handleOneTimeViewChange()">
+                                    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <span class="option-icon">👁️</span>
+                                            <span style="font-weight: 600;">One-Time View</span>
+                                        </div>
+                                        <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 400;">
+                                            Note will self-destruct after first view - perfect for sensitive information
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-share" onclick="shareNote()" id="shareBtn">
+                            <span class="btn-icon">🚀</span>
+                            <span>Generate Shareable Link</span>
+                        </button>
+
+                        <div id="shareLinkResult" class="share-result" style="display: none;">
+                            <div class="result-header">
+                                <span class="success-icon">✅</span>
+                                <h4>Link Generated Successfully!</h4>
+                            </div>
+                            <div class="link-container">
+                                <input type="text" id="shareLink" readonly class="share-link-input">
+                                <button class="btn btn-copy" onclick="copyShareLink()">
+                                    <span id="copyBtnText">📋 Copy</span>
+                                </button>
+                            </div>
+                            <div class="share-info">
+                                <p><strong>⏰ Expires:</strong> <span id="expiryInfo"></span></p>
+                                <p id="oneTimeInfo" style="display: none;"><strong>👁️ View Mode:</strong> One-time view only</p>
+                            </div>
+                            <div class="share-actions">
+                                <button class="btn btn-secondary" onclick="openShareLink()">🔗 Open Link</button>
+                                <button class="btn btn-secondary" onclick="resetEditor()">📝 Create New Note</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login" class="page">
+        <div class="auth-container">
+            <div class="auth-card glass">
+                <h2>Welcome Back</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                    Don't have an account? <a href="#" onclick="showPage('register')" style="color: var(--primary-color);">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register" class="page">
+        <div class="auth-container">
+            <div class="auth-card glass">
+                <h2>Create Account</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                    Already have an account? <a href="#" onclick="showPage('login')" style="color: var(--primary-color);">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard" class="page">
+        <div class="dashboard">
+            <div class="sidebar" id="sidebar">
+                <div class="logo" style="margin-bottom: 2rem;">SmartNotes</div>
+                <nav>
+                    <ul style="list-style: none;">
+                        <li><a href="#" onclick="showDashboardSection('notes')" style="display: block; padding: 0.5rem 0; color: var(--text-primary); text-decoration: none;">My Notes</a></li>
+                        <li><a href="#" onclick="showDashboardSection('shared')" style="display: block; padding: 0.5rem 0; color: var(--text-primary); text-decoration: none;">Shared Notes</a></li>
+                        <li><a href="#" onclick="showDashboardSection('settings')" style="display: block; padding: 0.5rem 0; color: var(--text-primary); text-decoration: none;">Settings</a></li>
+                        <li><a href="#" onclick="logout()" style="display: block; padding: 0.5rem 0; color: var(--text-primary); text-decoration: none;">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="dashboard-main" id="dashboardMain">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>My Notes</h1>
+                    <div>
+                        <button class="btn btn-secondary" onclick="toggleSidebar()">☰</button>
+                        <button class="btn btn-primary" onclick="createNote()">New Note</button>
+                    </div>
+                </div>
+                <div class="notes-grid" id="notesGrid">
+                    <!-- Notes will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

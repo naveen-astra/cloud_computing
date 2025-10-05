@@ -1,32 +1,362 @@
 <!-- templates/view_note.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>View Secure Note</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if error %}Note Not Found{% else %}Shared Note{% endif %} - SmartNotes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #f4f4f4;
-      text-align: center;
-      padding: 50px;
+    /* Additional styles for note viewer */
+    .note-viewer-container {
+      min-height: 100vh;
+      background: var(--bg-secondary);
+      padding: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .note-box {
-      background-color: #222;
-      border-radius: 10px;
-      padding: 20px;
-      margin: auto;
-      width: 70%;
-      font-size: 18px;
+
+    .note-viewer-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-large);
+      padding: 3rem;
+      max-width: 800px;
+      width: 90%;
+      margin: 2rem auto;
+      border: 2px solid var(--border-color);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .note-viewer-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .note-viewer-header h1 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .note-viewer-header .icon {
+      font-size: 2.5rem;
+    }
+
+    .note-viewer-header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .note-content {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-primary);
       white-space: pre-wrap;
       word-wrap: break-word;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .note-metadata {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .metadata-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .metadata-item .icon {
+      font-size: 1.2rem;
+    }
+
+    .warning-banner {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .warning-banner .icon {
+      font-size: 2rem;
+    }
+
+    .warning-banner strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .error-container {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .error-icon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    .error-container h1 {
+      color: var(--text-primary);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: 12px;
+      border-left: 4px solid #ef4444;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn-action {
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-primary-action {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      box-shadow: var(--shadow-light);
+    }
+
+    .btn-primary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .btn-secondary-action {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary-action:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .copy-note-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .copy-note-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .copy-note-btn.copied {
+      background: #10b981;
+    }
+
+    @media (max-width: 768px) {
+      .note-viewer-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .note-viewer-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .note-content {
+        font-size: 1rem;
+        padding: 1.5rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-action {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🔐 Your Secure Note</h1>
-  <div class="note-box">
-    {{ note }}
+  <div class="note-viewer-container">
+    <div class="note-viewer-card">
+      {% if error %}
+        <!-- Error State -->
+        <div class="error-container">
+          <div class="error-icon">❌</div>
+          <h1>Note Not Available</h1>
+          <div class="error-message">
+            {{ error }}
+          </div>
+          <div class="action-buttons">
+            <a href="/" class="btn-action btn-primary-action">🏠 Go to Home</a>
+            <a href="/#editor" class="btn-action btn-secondary-action">📝 Create New Note</a>
+          </div>
+        </div>
+      {% else %}
+        <!-- Success State - Display Note -->
+        <div class="note-viewer-header">
+          <h1>
+            <span class="icon">🔐</span>
+            <span>Shared Note</span>
+          </h1>
+          <p>This note was securely shared with you</p>
+        </div>
+
+        {% if one_time_view %}
+        <!-- One-Time View Warning -->
+        <div class="warning-banner">
+          <span class="icon">⚠️</span>
+          <div>
+            <strong>One-Time View Only!</strong>
+            <p style="margin: 0;">This note will be permanently deleted after you close or refresh this page. Make sure to copy any important information now.</p>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Note Content -->
+        <div class="note-content" id="noteContent">{{ note }}</div>
+
+        <!-- Metadata -->
+        {% if created_at or expires_at %}
+        <div class="note-metadata">
+          {% if created_at %}
+          <div class="metadata-item">
+            <span class="icon">📅</span>
+            <span><strong>Created:</strong> {{ created_at }}</span>
+          </div>
+          {% endif %}
+          {% if expires_at %}
+          <div class="metadata-item">
+            <span class="icon">⏰</span>
+            <span><strong>Expires:</strong> {{ expires_at }}</span>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <button class="copy-note-btn" onclick="copyNoteContent()">
+          <span id="copyIcon">📋</span>
+          <span id="copyText">Copy Note to Clipboard</span>
+        </button>
+
+        <div class="action-buttons">
+          <a href="/" class="btn-action btn-primary-action">🏠 Go to Home</a>
+          <a href="/#editor" class="btn-action btn-secondary-action">📝 Create Your Own Note</a>
+        </div>
+      {% endif %}
+    </div>
   </div>
+
+  <script>
+    // Theme support
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    // Copy note content function
+    function copyNoteContent() {
+      const noteContent = document.getElementById('noteContent');
+      if (!noteContent) return;
+
+      const text = noteContent.textContent;
+      const copyBtn = document.querySelector('.copy-note-btn');
+      const copyIcon = document.getElementById('copyIcon');
+      const copyText = document.getElementById('copyText');
+
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.classList.add('copied');
+        copyIcon.textContent = '✅';
+        copyText.textContent = 'Copied to Clipboard!';
+
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyIcon.textContent = '📋';
+          copyText.textContent = 'Copy Note to Clipboard';
+        }, 2500);
+      }).catch(() => {
+        // Fallback for older browsers
+        const range = document.createRange();
+        range.selectNodeContents(noteContent);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        try {
+          document.execCommand('copy');
+          copyBtn.classList.add('copied');
+          copyIcon.textContent = '✅';
+          copyText.textContent = 'Copied to Clipboard!';
+
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyIcon.textContent = '📋';
+            copyText.textContent = 'Copy Note to Clipboard';
+          }, 2500);
+        } catch (err) {
+          alert('Failed to copy. Please select and copy manually.');
+        }
+        
+        selection.removeAllRanges();
+      });
+    }
+  </script>
 </body>
 </html>
