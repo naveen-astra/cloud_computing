@@ -76,4 +76,4 @@ cloud_computing/
 - Cloud computing practical demonstration  
 
 
-Add your preferred license (MIT recommended).
+
